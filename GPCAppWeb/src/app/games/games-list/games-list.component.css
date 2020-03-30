@@ -1,0 +1,26 @@
+.row {
+    border: solid 1px black;
+    /* padding-top: 0px; */
+    height: 100%;
+}
+.searchBar div.col-sm-10, .searchBar div.col-sm-2{
+    border: solid 1px black;
+    padding-left: 0%;
+    padding-right: 0%;
+    
+}
+.searchBar input {
+    width: 100%;
+    /* height: 100%; */
+    
+}
+.searchBar button  {
+    width: 100%;
+    /* height: 100%; */
+}
+
+.searchedGames .col-sm-6 {
+    border: solid 1px red;
+    padding: 0% 0% 0% 0%;
+}
+

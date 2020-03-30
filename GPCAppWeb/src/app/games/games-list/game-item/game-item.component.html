@@ -1,0 +1,23 @@
+<a
+    class="list-group-item gameContent"
+    style="cursor: pointer;">
+    <div class="grid" style="margin: 0px 0px 0px 0px">
+        <div class="row">
+            <div class="col col-sm-11" style="border: 1px solid violet ;width:100%"> 
+                <div class="gameImage">
+                    <img [src]="game.imagePath" alt="{{ game.title }}" class="img-responsive">
+                </div>
+                <div class="gameTitle">
+                    {{ game.title }}
+                </div>
+                <div class="gamePrice">
+                    {{ game.price }} {{ game.currency }}
+                </div>
+            </div>
+            <div class="col col-sm-1 gameMenu" style="border: 1px solid wheat ;width:100%">
+                <button class="btn btn-success" (click)="onCompare()">C</button>
+                <button class="btn btn-primary" (click)="onGoToStorePage()">S</button>
+            </div>
+        </div>
+    </div>
+</a>

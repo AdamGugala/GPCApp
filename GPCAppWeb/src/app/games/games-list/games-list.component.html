@@ -1,0 +1,80 @@
+<div class="container" style="padding: 0% 0% 0% 0%;">
+    <div class="row">
+        <div class="col-xs-2">
+            <button class="btn btn-primary" (click)="onGogTest()">Test GOG</button>
+        </div>
+        <div class="col-xs-2">
+            <button class="btn btn-primary" (click)="onSteamListTest()">Test List Steam</button>
+        </div>
+        <div class="col-xs-2">
+            <button class="btn btn-primary" (click)="onSteamTest()">Test Steam</button>
+        </div>
+        <div class="col-xs-2">
+            <button class="btn btn-primary" (click)="onSort()" [disabled]=this.isLoading>Sort</button>
+        </div>
+    </div>
+    <form [formGroup]="serachForm" (ngSubmit)="searchGame()">
+        <div class="searchBar">     
+            <div class="row">
+                <div class="col-sm-10">
+                    <div class="form-group">
+                        <input 
+                            type="text"
+                            id="searchField"
+                            formControlName="searchField"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <button 
+                        class="btn btn-primary" 
+                        type="submit"
+                        [disabled]=!this.serachForm.valid>
+                        Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="container" style="padding: 0% 0% 0% 0%;">
+    <div class="row">
+        <div class="col-sm-12">
+            <p *ngIf = this.isLoading>Loading!</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            GOG
+        </div>
+        <div class="col-sm-6">
+            STEAM
+        </div>
+    </div>
+    <div class="searchedGames">
+        <div class="row" *ngIf="mockGamesVisible">
+            <div class="col-sm-6">
+                <app-game-item [game]="mockGogGame"></app-game-item>
+            </div>
+            <div class="col-sm-6">
+                <app-game-item [game]="mockSteamGame"></app-game-item>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <app-game-item
+                    *ngFor="let game of gamesListGog" 
+                    [game]="game"
+                    >
+                </app-game-item>
+            </div>
+            <div class="col-sm-6">
+                <app-game-item
+                    *ngFor="let game of gamesListSteam" 
+                    [game]="game"
+                    >
+                </app-game-item>
+            </div>
+        </div>
+    </div>
+</div>
