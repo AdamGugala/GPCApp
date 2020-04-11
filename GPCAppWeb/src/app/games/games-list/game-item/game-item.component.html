@@ -1,6 +1,7 @@
 <a
     class="list-group-item gameContent"
-    style="cursor: pointer;">
+    style="cursor: pointer;"
+    [ngClass]="{steamItem: game.gameSource === 'steam', gogItem: game.gameSource === 'gog'}">
     <div class="grid" style="margin: 0px 0px 0px 0px">
         <div class="row">
             <div class="col col-sm-11" style="border: 1px solid violet ;width:100%"> 

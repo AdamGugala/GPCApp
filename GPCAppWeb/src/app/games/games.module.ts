@@ -7,6 +7,8 @@ import { GameItemComponent } from './games-list/game-item/game-item.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+import { InlineSVGModule } from 'ng-inline-svg';
+
 const routes: Routes = [
     {path: '', component: GamesListComponent,
      resolve: [GamesResolverService]
@@ -22,7 +24,8 @@ const routes: Routes = [
     imports: [
     RouterModule.forChild(routes),
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    InlineSVGModule.forRoot()
   ]
 })
 export class GamesModule {}

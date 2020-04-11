@@ -1,0 +1,28 @@
+.navbar-brand {
+    font-size: 24px;
+    text-shadow: black;
+}
+.myHeader {
+    background-color: rgb(168, 168, 168);
+    box-shadow: 1px 1px 20px black;
+    margin-bottom: 10px;
+}
+.myHeader .container-fluid {
+    align-items: baseline;
+    font-weight: 400;
+}
+.active {
+    font-weight: bold;
+}
+li {
+    margin: 0px 10px 0px 0px;
+    font-size: 20px;
+}
+li:before {
+    content: '|';
+    margin-right: 10px;
+    color: rgb(73, 73, 73);
+}
+a {
+    color: black;
+}

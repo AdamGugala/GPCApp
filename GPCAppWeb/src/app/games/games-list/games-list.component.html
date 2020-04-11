@@ -43,12 +43,12 @@
             <p *ngIf = this.isLoading>Loading!</p>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-6">
-            GOG
+    <div class="row gameListHeaders">
+        <div class="col-sm-6 gog">
+            <div class="gogLogo" [inlineSVG]="'assets/img/GOG.svg'" [setSVGAttributes]="{height: 100, width: 200}"></div>
         </div>
-        <div class="col-sm-6">
-            STEAM
+        <div class="col-sm-6 steam">
+            <div class="steamLogo" [inlineSVG]="'assets/img/steam.svg'" [setSVGAttributes]="{height: 100, width: 200}"></div>
         </div>
     </div>
     <div class="searchedGames">
@@ -61,14 +61,14 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-6 gog">
                 <app-game-item
                     *ngFor="let game of gamesListGog" 
                     [game]="game"
                     >
                 </app-game-item>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6 steam">
                 <app-game-item
                     *ngFor="let game of gamesListSteam" 
                     [game]="game"

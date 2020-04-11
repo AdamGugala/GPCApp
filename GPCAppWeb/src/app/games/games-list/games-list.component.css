@@ -24,3 +24,24 @@
     padding: 0% 0% 0% 0%;
 }
 
+.steamLogo {
+    max-height: 100%;
+    padding: 10px 0px 10px 10px;
+}
+.gogLogo {
+    max-height:100%;
+    padding: 10px 0px 10px 0px;
+}
+.gameListHeaders .col-sm-6 {
+    padding: 0px 0px 0px 0px;
+}
+
+.gameListHeaders .steamLogo {
+    filter:invert(1);
+}
+.gog {
+    background-color: #d8d8d8;
+}
+.steam {
+    background-color: #1b2838;
+}

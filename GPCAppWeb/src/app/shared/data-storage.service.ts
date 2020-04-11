@@ -7,7 +7,6 @@ import { Game } from '../games/game.module';
 
 @Injectable({providedIn: 'root'})
 export class DataStorageService {
-    private url: string;
 
     constructor(
         private http: HttpClient,
@@ -16,29 +15,17 @@ export class DataStorageService {
             this.url = baseUrl;
         }
 
+    private url: string;
+    private firstPageLoad = true;
+
 /////////////////////////////////////////////////////////////////////////////////////////
 // STEAM //
 
     fetchGamesListAllSteam() {
-        let response;
-        let dataExist = false;
-        response = this.http.get<any>(this.url + 'steamGameList')
-        .pipe(
-            map(games => {
-                dataExist = games.hasOwnProperty('app') && games['app'].length !== 0;
-                if (dataExist) {
-                    games = games.applist.apps;
-                }
-                return games;
-            }),
-            tap(games => {
-                this.gameService.clearGamesListAllSteam();
-                this.gameService.setGamesListAllSteam(games);
-            })
-        );
-        // If first response does not return list of steam games then use alternative url to get this list
-        if (!dataExist) {
-            response = this.http.get<any>(this.url + 'steamGameList/true')
+        if (this.firstPageLoad) {
+            let response;
+            let dataExist = false;
+            response = this.http.get<any>(this.url + 'steamGameList')
             .pipe(
                 map(games => {
                     dataExist = games.hasOwnProperty('app') && games['app'].length !== 0;
@@ -52,9 +39,27 @@ export class DataStorageService {
                     this.gameService.setGamesListAllSteam(games);
                 })
             );
+            // If first response does not return list of steam games then use alternative url to get this list
+            if (!dataExist) {
+                response = this.http.get<any>(this.url + 'steamGameList/true')
+                .pipe(
+                    map(games => {
+                        dataExist = games.hasOwnProperty('app') && games['app'].length !== 0;
+                        if (dataExist) {
+                            games = games.applist.apps;
+                        }
+                        return games;
+                    }),
+                    tap(games => {
+                        this.gameService.clearGamesListAllSteam();
+                        this.gameService.setGamesListAllSteam(games);
+                    })
+                );
+            }
+            // TODO throw error: no data. Display message for user
+            this.firstPageLoad = false;
+            return response;
         }
-        // TODO throw error: no data. Display message for user
-        return response;
     }
 
     fetchGameSteam(id: number, isMockGame?: boolean) {

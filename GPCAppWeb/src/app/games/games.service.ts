@@ -5,6 +5,7 @@ import { Game } from './game.module';
 
 @Injectable({providedIn: 'root'})
 export class GamesService {
+
     private gamesListSteam: Game[] = [];
     private gamesListAllSteam: any[] = [];
     private gamesListGog: Game[] = [];
@@ -195,13 +196,8 @@ export class GamesService {
         }
     }
 
-    openStorePage(game: Game) {
-        let url: string;
-        if (game.gameSource === 'steam') {
-            url = 'https://store.steampowered.com/app/' + game.id.toString();
-        } else if (game.gameSource === 'gog') {
-            url = 'https://www.gog.com/game/' + game.title.toLowerCase().split(' ').join('_');
-        }
-        window.open(url, '_blank');
+    openStorePage(gameStoreUrl: string) {
+        console.log(gameStoreUrl);
+        window.open(gameStoreUrl, '_blank');
     }
 }

@@ -41,7 +41,6 @@ namespace testApp.NETCore.Controllers
             var httpClient = HttpClientFactory.Create();
             var url = "https://api.steampowered.com/ISteamApps/GetAppList/v0001";
             var urlAlt = "https://api.steampowered.com/ISteamApps/GetAppList/v0002";
-            Console.WriteLine("TESTY: " + useUrlAlt);
             if (useUrlAlt == true) {
                 url = urlAlt;
             }

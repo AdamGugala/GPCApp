@@ -8,6 +8,10 @@ a {
 code {
   color: #e01a76;
 }
+body {
+  background-color: rgb(189, 189, 189);
+  /* font-family: "Motiva Sans", Sans-serif; */
+}
 
 .btn-primary {
   color: #fff;
