@@ -23,7 +23,8 @@ export class GamesListComponent implements OnInit, OnDestroy {
 
   serachForm: FormGroup;
 
-  isLoading: boolean;
+  isLoadingSteam: boolean;
+  isLoadingGog: boolean;
 
   selectedGameIndexSteam: number;
   selectedGameIndexGog: number;
@@ -96,13 +97,15 @@ export class GamesListComponent implements OnInit, OnDestroy {
   }
 
   searchGame() {
-    this.isLoading = true;
+    this.isLoadingSteam = true;
+    this.isLoadingGog = true;
     clearInterval(this.interval);
 
     // GOG //
     this.dsService.fetchSearchedGamesGog(this.serachForm.controls['searchField'].value).subscribe((gamesList) => {
       this.gamesService.setGamesListGog(gamesList);
-    });
+      this.isLoadingGog = false;
+      });
     // STEAM //
     this.gamesService.clearGamesListSteam();
     const indexes = this.gamesService.getIndexesOfSearchedGamesSteam(this.serachForm.controls['searchField'].value);
@@ -112,16 +115,16 @@ export class GamesListComponent implements OnInit, OnDestroy {
       this.interval = setInterval(() => {
         index++;
         if (index === maxIndex - 1) {
-          this.isLoading = false;
+          this.isLoadingSteam = false;
           clearInterval(this.interval);
-        }
+          }
         this.dsService.fetchGameSteam(+indexes[index]).subscribe(game => {
           // console.log(+indexes[index], game);
           this.gamesService.setGamesListSteam(game, index === maxIndex - 1);
         });
       }, 650);
     } else {
-      this.isLoading = false;
+      this.isLoadingSteam = false;
     }
   }
 

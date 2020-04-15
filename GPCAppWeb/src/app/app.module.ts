@@ -10,6 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { HeaderComponent } from './header/header.component';
 import { AboutComponent } from 'src/about/about.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,

@@ -6,8 +6,10 @@ import { GamesResolverService } from './games-resolver';
 import { GameItemComponent } from './games-list/game-item/game-item.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { LoadingSpinnerComponent } from '../shared/loading-spinner/loading-spinner';
 
 import { InlineSVGModule } from 'ng-inline-svg';
+
 
 const routes: Routes = [
     {path: '', component: GamesListComponent,
@@ -19,7 +21,8 @@ const routes: Routes = [
     declarations: [
         GamesListComponent,
         GamesInfoComponent,
-        GameItemComponent
+        GameItemComponent,
+        LoadingSpinnerComponent
     ],
     imports: [
     RouterModule.forChild(routes),

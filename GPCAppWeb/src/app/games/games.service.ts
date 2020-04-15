@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Game } from './game.module';
+import { isUndefined } from 'util';
 
 
 @Injectable({providedIn: 'root'})
@@ -18,6 +19,9 @@ export class GamesService {
 
     private mockGogGame: Game;
     private mockSteamGame: Game;
+
+    private gamePriceSteam: number;
+    private gamePriceGog: number;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // STEAM //
@@ -185,6 +189,7 @@ export class GamesService {
     }
 
     moveToTopOfList(game: Game, listType: string) {
+        this.setPricesToCompare(isUndefined(game.price) ? 0 : +game.price, listType);
         if (listType === 'steam') {
             this.gamesListSteam.splice(this.gamesListSteam.indexOf(game), 1);
             this.gamesListSteam.unshift(game);
@@ -195,6 +200,33 @@ export class GamesService {
             this.gamesListChangedGog.next(this.gamesListGog.slice());
         }
     }
+
+    setPricesToCompare(price: number, source: string) {
+        if (source === 'steam') {
+            this.gamePriceSteam = price;
+        } else if (source === 'gog') {
+            this.gamePriceGog = price;
+        }
+    }
+
+    comparePrices(source: string): boolean {
+        if ((this.gamePriceGog !== null) && (this.gamePriceSteam !== null)) {
+            if (source === 'steam') {
+                return this.gamePriceSteam < this.gamePriceGog;
+            } else if (source === 'gog') {
+                return this.gamePriceGog < this.gamePriceSteam;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    // clearGamePrices(source: string) {
+    //         this.gamePriceGog = null;
+    //         this.gamePriceSteam = null;
+    // }
 
     openStorePage(gameStoreUrl: string) {
         console.log(gameStoreUrl);

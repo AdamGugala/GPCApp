@@ -45,3 +45,11 @@
 .steam {
     background-color: #1b2838;
 }
+
+.toCompare {
+    text-decoration: underline;
+}
+.lowerPrice {
+    text-decoration: underline;
+    color:green;
+}

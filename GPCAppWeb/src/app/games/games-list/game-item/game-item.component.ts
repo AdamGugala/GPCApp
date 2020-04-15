@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, HostBinding } from '@angular/core';
 import { Game } from '../../game.module';
 import { GamesService } from '../../games.service';
 import { DataStorageService } from 'src/app/shared/data-storage.service';
@@ -10,18 +10,25 @@ import { DataStorageService } from 'src/app/shared/data-storage.service';
 })
 export class GameItemComponent implements OnInit {
     @Input() game: Game;
-    @Input() index: number; // TODO
+    @Input() index: number;
 
+    @HostBinding('class.lowerPrice') hasLowerPrice = false;
     constructor(private gamesService: GamesService, private dsService: DataStorageService) {}
+
+    // hasLowerPrice = false;
 
     ngOnInit() {
         if (this.game === undefined) {
             this.game = new Game(0, '', '', '', '');
         }
+        if (this.index === 0) {
+            this.gamesService.setPricesToCompare(+this.game.price, this.game.gameSource);
+        }
     }
 
     onCompare() {
         this.gamesService.moveToTopOfList(this.game, this.game.gameSource);
+        this.hasLowerPrice = this.gamesService.comparePrices(this.game.gameSource);
     }
 
     onGoToStorePage() {

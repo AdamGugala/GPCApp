@@ -1,4 +1,4 @@
-<div class="container" style="padding: 0% 0% 0% 0%;">
+<div class="container" style="padding: 0% 0% 0% 0%;  width: 100%">
     <div class="row">
         <div class="col-xs-2">
             <button class="btn btn-primary" (click)="onGogTest()">Test GOG</button>
@@ -10,7 +10,7 @@
             <button class="btn btn-primary" (click)="onSteamTest()">Test Steam</button>
         </div>
         <div class="col-xs-2">
-            <button class="btn btn-primary" (click)="onSort()" [disabled]=this.isLoading>Sort</button>
+            <button class="btn btn-primary" (click)="onSort()" [disabled]=this.isLoadingSteam>Sort</button>
         </div>
     </div>
     <form [formGroup]="serachForm" (ngSubmit)="searchGame()">
@@ -37,18 +37,40 @@
         </div>
     </form>
 </div>
-<div class="container" style="padding: 0% 0% 0% 0%;">
-    <div class="row">
+<div class="container" style="padding: 0% 0% 0% 0%; width: 100%">
+    <!-- <div class="row">
         <div class="col-sm-12">
             <p *ngIf = this.isLoading>Loading!</p>
         </div>
-    </div>
+    </div> -->
     <div class="row gameListHeaders">
         <div class="col-sm-6 gog">
-            <div class="gogLogo" [inlineSVG]="'assets/img/GOG.svg'" [setSVGAttributes]="{height: 100, width: 200}"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-7">
+                        <div class="gogLogo" [inlineSVG]="'assets/img/GOG.svg'" [setSVGAttributes]="{height: 100, width: 200}"></div>
+                    </div>
+                    <div class="col-sm-5" style="align-self: center;">
+                        <div *ngIf = this.isLoadingGog>
+                            <app-loading-spinner [gameType]="'gog'"></app-loading-spinner>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-sm-6 steam">
-            <div class="steamLogo" [inlineSVG]="'assets/img/steam.svg'" [setSVGAttributes]="{height: 100, width: 200}"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-7">
+                        <div class="steamLogo" [inlineSVG]="'assets/img/steam.svg'" [setSVGAttributes]="{height: 100, width: 200}"></div>
+                    </div>
+                    <div class="col-sm-5" style="align-self: center;">
+                        <div *ngIf = this.isLoadingSteam>
+                            <app-loading-spinner [gameType]="'steam'"></app-loading-spinner>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="searchedGames">
@@ -63,16 +85,19 @@
         <div class="row">
             <div class="col-sm-6 gog">
                 <app-game-item
-                    *ngFor="let game of gamesListGog" 
+                    *ngFor="let game of gamesListGog; let i = index" 
                     [game]="game"
+                    [index]="i"
+                    [ngClass]="{toCompare: i===0}"
                     >
                 </app-game-item>
             </div>
             <div class="col-sm-6 steam">
                 <app-game-item
-                    *ngFor="let game of gamesListSteam" 
+                    *ngFor="let game of gamesListSteam; let i = index" 
                     [game]="game"
-                    >
+                    [index] = "i"
+                    [ngClass]="{toCompare: i===0}">
                 </app-game-item>
             </div>
         </div>

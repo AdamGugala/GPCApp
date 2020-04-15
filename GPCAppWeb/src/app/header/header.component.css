@@ -18,11 +18,17 @@ li {
     margin: 0px 10px 0px 0px;
     font-size: 20px;
 }
-li:before {
+.navbar-nav span {
     content: '|';
     margin-right: 10px;
     color: rgb(73, 73, 73);
+    font-size: 20px;
 }
+/* li:before {
+    content: '|';
+    margin-right: 10px;
+    color: rgb(73, 73, 73);
+} */
 a {
     color: black;
 }
