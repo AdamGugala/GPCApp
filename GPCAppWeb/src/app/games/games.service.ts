@@ -23,21 +23,27 @@ export class GamesService {
     private gamePriceSteam: number;
     private gamePriceGog: number;
 
+
 /////////////////////////////////////////////////////////////////////////////////////////
 // STEAM //
-    setGamesListAllSteam(games: any[]) {
+    setGamesListAllSteam(games: any[]): boolean {
         if (games !== undefined) {
             if (games.hasOwnProperty('app')) {
                 for (let i = 0; i < games['app'].length; i++) {
                     this.gamesListAllSteam[games['app'][i].name] = games['app'][i];
                 }
             } else if (games.hasOwnProperty('applist')) {
-                for (let i = 0; i < games['applist']['apps'].length; i++) {
-                    this.gamesListAllSteam[games['applist']['apps'][i].name] = games['applist']['apps'][i];
+                for (let i = 0; i < games['applist']['apps']['app'].length; i++) {
+                    this.gamesListAllSteam[games['applist']['apps']['app'][i].name] = games['applist']['apps']['app'][i];
                 }
             }
         }
         console.log('Steam game list All: ', games);
+        return this.gamesListAllSteam.length > 1;
+    }
+
+    getGamesListAllSteam() {
+        return this.gamesListAllSteam.slice();
     }
 
     clearGamesListAllSteam() {
@@ -223,10 +229,6 @@ export class GamesService {
         }
     }
 
-    // clearGamePrices(source: string) {
-    //         this.gamePriceGog = null;
-    //         this.gamePriceSteam = null;
-    // }
 
     openStorePage(gameStoreUrl: string) {
         console.log(gameStoreUrl);

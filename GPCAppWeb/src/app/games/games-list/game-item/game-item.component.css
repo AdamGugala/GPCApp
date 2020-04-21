@@ -88,9 +88,16 @@
     color: #C6D4DF;
 }
 
+
+
 .gogItem {
     background-color: #d8d8d8;
 }
 .gogItem div.gameTitle, .gogItem div.gamePrice {
     color: #1a1a1a;
+}
+
+.lowerPrice .gameInfo div{
+    color:  #007e28;
+    font-weight: bold;
 }

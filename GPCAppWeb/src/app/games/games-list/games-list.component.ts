@@ -14,40 +14,83 @@ export class GamesListComponent implements OnInit, OnDestroy {
 
   constructor(private dsService: DataStorageService, private gamesService: GamesService) { }
 
-  subscribtionSteam: Subscription;
-  subscribtionGog: Subscription;
-  subscribtionLoading: Subscription;
+  // subs to detect changes in gamesListSteam and gamesListGog in gameService and update lists in this component.
+  subGamesListSteam: Subscription;
+  subGamesListGog: Subscription;
+  // subs to get list of all games id from steam to use for search games prices
+  subGamesListAllSteam1: Subscription;
+  subGamesListAllSteam2: Subscription;
 
-  gamesListSteam: any = [];
-  gamesListGog: any = [];
+  // displayed lists of games.
+  gamesListSteam: Game[] = [];
+  gamesListGog: Game[] = [];
 
+  // FormGroup from search bar.
   serachForm: FormGroup;
 
+  // if true then loading spinners are visible.
   isLoadingSteam: boolean;
   isLoadingGog: boolean;
 
-  selectedGameIndexSteam: number;
-  selectedGameIndexGog: number;
+  // true by default. Set to false if list of games id from is not empty.
+  gamesListSteamNoData = true;
+  // Set to to true after specified time if list of games id from is empty.
+  showErrorSteamNoData = false;
+
+
+  // interval between http requests of subsequent games from the Steam list. Necessary due to Steam API limitations.
+  intervalSteamGetHttp: any;
+  // timeout between http requests
+  timeoutHttpReqSteam = 650; // in miliseconds
+
+  // interval to count time to show error message if list of games id from steam is empty
+  intervalSteamListNoData: any;
+  timeToShowErrorMsgSteam = 4; // in seconds;
 
   // to tests
   mockGogGame: Game;
   mockSteamGame: Game;
   mockGamesVisible = false;
-
-  interval: any;
   //
 
   ngOnInit(): void {
+    // sub to get id list of all games id from steam.
+    // There are to sources. If first does not set the games list then the second is tried out.
+    this.subGamesListAllSteam1 = this.dsService.fetchGamesListAllSteam().subscribe(() => {
+      if (this.gamesService.getGamesListAllSteam().length === 0) {
+        this.subGamesListAllSteam2 = this.dsService.fetchGamesListAllSteam(true).subscribe(() => {
+          console.log('Steam: alternative source of games');
+          if (this.gamesService.getGamesListAllSteam().length !== 0) {
+            this.gamesListSteamNoData = false;
+          }
+        });
+      } else {
+        this.gamesListSteamNoData = false;
+      }
+    });
+
+    // show error message if games list from steam is still empty after specified time
+    let time = 0;
+    this.intervalSteamListNoData = setInterval(() => {
+      time++;
+      if (time > this.timeToShowErrorMsgSteam) {
+        clearInterval(this.intervalSteamListNoData);
+        if (this.gamesListSteamNoData) {
+          this.showErrorSteamNoData = true;
+        }
+      }
+    }, 1000);
+
     this.serachForm = new FormGroup({
       'searchField': new FormControl(null, Validators.required)
     });
 
-    this.subscribtionSteam = this.gamesService.gamesListChangedSteam.subscribe(
+    this.subGamesListSteam = this.gamesService.gamesListChangedSteam.subscribe(
       (games: Game[]) => {
         this.gamesListSteam = games;
       }
     );
-    this.subscribtionGog = this.gamesService.gamesListChangedGog.subscribe(
+    this.subGamesListGog = this.gamesService.gamesListChangedGog.subscribe(
       (games: Game[]) => {
         this.gamesListGog = games;
       }
@@ -99,7 +142,7 @@ export class GamesListComponent implements OnInit, OnDestroy {
   searchGame() {
     this.isLoadingSteam = true;
     this.isLoadingGog = true;
-    clearInterval(this.interval);
+    clearInterval(this.intervalSteamGetHttp);
 
     // GOG //
     this.dsService.fetchSearchedGamesGog(this.serachForm.controls['searchField'].value).subscribe((gamesList) => {
@@ -112,25 +155,37 @@ export class GamesListComponent implements OnInit, OnDestroy {
     if (indexes.length !== 0) {
       let index = -1;
       const maxIndex = (indexes.length <= 40) ? indexes.length : 40;
-      this.interval = setInterval(() => {
+      this.intervalSteamGetHttp = setInterval(() => {
         index++;
         if (index === maxIndex - 1) {
           this.isLoadingSteam = false;
-          clearInterval(this.interval);
+          clearInterval(this.intervalSteamGetHttp);
           }
         this.dsService.fetchGameSteam(+indexes[index]).subscribe(game => {
           // console.log(+indexes[index], game);
           this.gamesService.setGamesListSteam(game, index === maxIndex - 1);
         });
-      }, 650);
+      }, this.timeoutHttpReqSteam);
     } else {
       this.isLoadingSteam = false;
     }
   }
 
   ngOnDestroy() {
-    this.subscribtionSteam.unsubscribe();
-    this.subscribtionGog.unsubscribe();
-    clearInterval(this.interval);
+    this.subGamesListSteam.unsubscribe();
+    this.subGamesListGog.unsubscribe();
+    clearInterval(this.intervalSteamGetHttp);
+    clearInterval(this.intervalSteamListNoData);
+
+    // TODO
+    // To consider cyclic update of games list if first load was unsuccessful
+    if (this.subGamesListAllSteam1 !== undefined) {
+      this.subGamesListAllSteam1.unsubscribe();
+    }
+    if (this.subGamesListAllSteam2 !== undefined) {
+      this.subGamesListAllSteam2.unsubscribe();
+    }
   }
+
+
 }

@@ -1,25 +1,28 @@
-<a
+<a  #test
     class="list-group-item gameContent"
     style="cursor: pointer; max-width:460px;"
-    [ngClass]="{steamItem: game.gameSource === 'steam', gogItem: game.gameSource === 'gog'}">
+    [ngClass]="{lowerPrice: hasLowerPrice, steamItem: game.gameSource === 'steam', gogItem: game.gameSource === 'gog'}"
+    >
     <div class="grid" style="margin: 0px 0px 0px 0px; max-width:460px">
         <div class="row" style="max-width:460px">
             <div class="col col-sm-12" style="border: 1px solid violet ;max-width:460px"> 
                 <div class="gameImage">
                     <img [src]="game.imagePath" alt="{{ game.title }}" class="img-responsive">
                 </div>
-                <div class="gameTitle" (click)="onCompare()">
-                    {{ game.title }}
-                </div>
-                <div class="container">
-                    <div class="row">
-                        <div class="col col-sm-11">
-                            <div class="gamePrice">
-                                {{ game.price }} {{ game.currency }}
+                <div class="gameInfo">
+                    <div class="gameTitle" (click)="onCompare()">
+                        {{ game.title }}
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col col-sm-11">
+                                <div class="gamePrice">
+                                    {{ game.price }} {{ game.currency }}
+                                </div>
                             </div>
-                        </div>
-                        <div class="col col-sm-1 gameMenu">
-                            <button class="btn btn-success" (click)="onCompare()">C</button>
+                            <div class="col col-sm-1 gameMenu">
+                                <button class="btn btn-success" (click)="onCompare()">C</button>
+                            </div>
                         </div>
                     </div>
                 </div>

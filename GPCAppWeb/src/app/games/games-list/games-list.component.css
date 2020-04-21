@@ -49,7 +49,7 @@
 .toCompare {
     text-decoration: underline;
 }
-.lowerPrice {
-    text-decoration: underline;
-    color:green;
+
+.errorMessageSteam p{
+    margin: 0px 0px 0px 0px;
 }

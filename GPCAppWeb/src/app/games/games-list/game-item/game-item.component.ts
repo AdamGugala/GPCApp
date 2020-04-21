@@ -1,34 +1,73 @@
-import { Component, Input, OnInit, HostBinding } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { Game } from '../../game.module';
 import { GamesService } from '../../games.service';
 import { DataStorageService } from 'src/app/shared/data-storage.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-game-item',
     templateUrl: './game-item.component.html',
     styleUrls: ['./game-item.component.css']
 })
-export class GameItemComponent implements OnInit {
+export class GameItemComponent implements OnInit, OnDestroy {
     @Input() game: Game;
-    @Input() index: number;
+    @Input() set index(myIndex: number) {
+        this.myIndex = myIndex;
+         if (!this.firstInit) {
+            if (myIndex === 0) {
+                this.hasLowerPrice = this.gamesService.comparePrices(this.game.gameSource);
+            } else {
+                this.hasLowerPrice = false;
+            }
+        } else {
+            if (myIndex === 0) {
+                this.hasLowerPrice = false;
+                this.gamesService.setPricesToCompare((this.game.price === undefined) ? 0 : +this.game.price, this.game.gameSource);
+            }
+        }
+    }
 
-    @HostBinding('class.lowerPrice') hasLowerPrice = false;
-    constructor(private gamesService: GamesService, private dsService: DataStorageService) {}
+    constructor(
+        private gamesService: GamesService,
+        private dsService: DataStorageService,
+    ) {}
 
-    // hasLowerPrice = false;
+    public hasLowerPrice = false;
+    subIndexChangedSteam: Subscription;
+    subIndexChangedGog: Subscription;
+    private myIndex: number;
+    private toCompare = false;
+
+    firstInit = true;
+
 
     ngOnInit() {
         if (this.game === undefined) {
             this.game = new Game(0, '', '', '', '');
         }
-        if (this.index === 0) {
-            this.gamesService.setPricesToCompare(+this.game.price, this.game.gameSource);
-        }
+        this.firstInit = false;
+
+        this.subIndexChangedSteam = this.gamesService.gamesListChangedSteam.subscribe(() => {
+            if ((this.myIndex === 0) && (!this.firstInit) && (this.toCompare)) {
+                this.hasLowerPrice = this.gamesService.comparePrices(this.game.gameSource);
+            } else {
+                this.toCompare = false;
+            }
+        });
+
+        this.subIndexChangedGog = this.gamesService.gamesListChangedGog.subscribe(() => {
+            if ((this.myIndex === 0) && (!this.firstInit) && (this.toCompare)) {
+                this.hasLowerPrice = this.gamesService.comparePrices(this.game.gameSource);
+            } else {
+                this.toCompare = false;
+            }
+        });
     }
 
     onCompare() {
         this.gamesService.moveToTopOfList(this.game, this.game.gameSource);
-        this.hasLowerPrice = this.gamesService.comparePrices(this.game.gameSource);
+        this.toCompare = true;
+        window.scroll(0, 0);
     }
 
     onGoToStorePage() {
@@ -43,6 +82,11 @@ export class GameItemComponent implements OnInit {
             });
             // url = 'https://www.gog.com/game/' + game.title.toLowerCase().split(' ').join('_');
         }
+    }
+
+    ngOnDestroy() {
+        this.subIndexChangedGog.unsubscribe();
+        this.subIndexChangedSteam.unsubscribe();
     }
 
 }

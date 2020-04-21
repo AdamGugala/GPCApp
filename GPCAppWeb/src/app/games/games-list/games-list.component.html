@@ -38,11 +38,6 @@
     </form>
 </div>
 <div class="container" style="padding: 0% 0% 0% 0%; width: 100%">
-    <!-- <div class="row">
-        <div class="col-sm-12">
-            <p *ngIf = this.isLoading>Loading!</p>
-        </div>
-    </div> -->
     <div class="row gameListHeaders">
         <div class="col-sm-6 gog">
             <div class="container">
@@ -68,6 +63,9 @@
                         <div *ngIf = this.isLoadingSteam>
                             <app-loading-spinner [gameType]="'steam'"></app-loading-spinner>
                         </div>
+                        <div class="errorMessageSteam">
+                            <p *ngIf='gamesListSteamNoData && showErrorSteamNoData' style='color:tomato; font-weight: bold;'>Unable to load games list from SteamApi. Please try again later!</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -76,10 +74,10 @@
     <div class="searchedGames">
         <div class="row" *ngIf="mockGamesVisible">
             <div class="col-sm-6">
-                <app-game-item [game]="mockGogGame"></app-game-item>
+                <app-game-item [game]="mockGogGame" [index] = "0"></app-game-item>
             </div>
             <div class="col-sm-6">
-                <app-game-item [game]="mockSteamGame"></app-game-item>
+                <app-game-item [game]="mockSteamGame" [index] = "1"></app-game-item>
             </div>
         </div>
         <div class="row">
@@ -87,8 +85,7 @@
                 <app-game-item
                     *ngFor="let game of gamesListGog; let i = index" 
                     [game]="game"
-                    [index]="i"
-                    [ngClass]="{toCompare: i===0}"
+                    [index]="i"                   
                     >
                 </app-game-item>
             </div>
@@ -97,9 +94,10 @@
                     *ngFor="let game of gamesListSteam; let i = index" 
                     [game]="game"
                     [index] = "i"
-                    [ngClass]="{toCompare: i===0}">
+                    >
                 </app-game-item>
             </div>
         </div>
     </div>
 </div>
+

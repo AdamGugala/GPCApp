@@ -34,16 +34,18 @@ namespace testApp.NETCore.Controllers
             return data;
         }
 
-        [Route("steamGameList/{useUrlAlt?}")]
+        [Route("steamGameList/{useUrlAlt}")]
         [HttpGet]
-        public async Task<string> GetSteamGameList(bool ?useUrlAlt)
+        public async Task<string> GetSteamGameList(bool useUrlAlt)
         {
+            
             var httpClient = HttpClientFactory.Create();
             var url = "https://api.steampowered.com/ISteamApps/GetAppList/v0001";
             var urlAlt = "https://api.steampowered.com/ISteamApps/GetAppList/v0002";
             if (useUrlAlt == true) {
                 url = urlAlt;
             }
+            //Console.WriteLine("url: " + url);
             var data = await httpClient.GetStringAsync(url);
             return data;
         }
