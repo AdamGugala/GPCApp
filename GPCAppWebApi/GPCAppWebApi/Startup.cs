@@ -5,8 +5,11 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using GPC.NETCore.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace testApp.NETCore
+namespace GPC.NETCore
 {
     public class Startup
     {
@@ -20,6 +23,12 @@ namespace testApp.NETCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<GPCdbContext>(
+                options => {
+                    options.UseSqlServer(Configuration.GetConnectionString("Connection1"));
+                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                }
+            );
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

@@ -12,7 +12,7 @@ export class GamesResolverService implements Resolve<any> {
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         // Not used.
         // TO DEL
-        const response: any = this.dsStorage.fetchGamesListAllSteam(true);
+        const response: any = this.dsStorage.fetchGamesListAllSteam();
         return response;
     }
 }

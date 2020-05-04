@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace testApp.NETCore
+namespace GPC.NETCore
 {
     public class Program
     {
@@ -22,5 +22,6 @@ namespace testApp.NETCore
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+        
     }
 }

@@ -18,8 +18,7 @@ export class GamesListComponent implements OnInit, OnDestroy {
   subGamesListSteam: Subscription;
   subGamesListGog: Subscription;
   // subs to get list of all games id from steam to use for search games prices
-  subGamesListAllSteam1: Subscription;
-  subGamesListAllSteam2: Subscription;
+  subGamesListAllSteam: Subscription;
 
   // displayed lists of games.
   gamesListSteam: Game[] = [];
@@ -45,7 +44,7 @@ export class GamesListComponent implements OnInit, OnDestroy {
 
   // interval to count time to show error message if list of games id from steam is empty
   intervalSteamListNoData: any;
-  timeToShowErrorMsgSteam = 4; // in seconds;
+  timeToShowErrorMsgSteam = 10; // in seconds;
 
   // to tests
   mockGogGame: Game;
@@ -56,16 +55,12 @@ export class GamesListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // sub to get id list of all games id from steam.
     // There are to sources. If first does not set the games list then the second is tried out.
-    this.subGamesListAllSteam1 = this.dsService.fetchGamesListAllSteam().subscribe(() => {
-      if (this.gamesService.getGamesListAllSteam().length === 0) {
-        this.subGamesListAllSteam2 = this.dsService.fetchGamesListAllSteam(true).subscribe(() => {
-          console.log('Steam: alternative source of games');
-          if (this.gamesService.getGamesListAllSteam().length !== 0) {
-            this.gamesListSteamNoData = false;
-          }
-        });
-      } else {
+    this.isLoadingSteam = true;
+    this.subGamesListAllSteam = this.dsService.fetchGamesListAllSteam().subscribe(() => {
+      if (this.gamesService.getGamesListAllSteam().size > 1) {
+
         this.gamesListSteamNoData = false;
+        this.isLoadingSteam = false;
       }
     });
 
@@ -77,6 +72,7 @@ export class GamesListComponent implements OnInit, OnDestroy {
         clearInterval(this.intervalSteamListNoData);
         if (this.gamesListSteamNoData) {
           this.showErrorSteamNoData = true;
+          this.isLoadingSteam = false;
         }
       }
     }, 1000);
@@ -179,11 +175,8 @@ export class GamesListComponent implements OnInit, OnDestroy {
 
     // TODO
     // To consider cyclic update of games list if first load was unsuccessful
-    if (this.subGamesListAllSteam1 !== undefined) {
-      this.subGamesListAllSteam1.unsubscribe();
-    }
-    if (this.subGamesListAllSteam2 !== undefined) {
-      this.subGamesListAllSteam2.unsubscribe();
+    if (this.subGamesListAllSteam !== undefined) {
+      this.subGamesListAllSteam.unsubscribe();
     }
   }
 

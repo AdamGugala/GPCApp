@@ -1,6 +1,6 @@
 using System;
 
-namespace testApp.NETCore
+namespace GPC.NETCore
 {
     public class WeatherForecast
     {

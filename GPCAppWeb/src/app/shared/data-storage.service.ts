@@ -20,50 +20,23 @@ export class DataStorageService {
 /////////////////////////////////////////////////////////////////////////////////////////
 // STEAM //
 
-    fetchGamesListAllSteam(useAltSource?: boolean) {
+    fetchGamesListAllSteam() {
         if (this.firstPageLoad) {
             let dataExist = false;
-            if (!useAltSource) {
-                return this.http.get<any>(this.url + 'steamGameList/false')
-                .pipe(
-                    map(games1 => {
-                        // console.log('1_1.trying first source of games list from Steam');
-                        dataExist = games1.hasOwnProperty('applist') && games1['applist']['apps']['app'].length > 1;
-                        if (dataExist) {
-                            // console.log('1.1. first source of games list from Steam');
-                            games1 = games1.applist.apps;
-                        }
-                        return games1;
-                    }),
-                    tap(games1 => {
-                        if (dataExist) {
-                            this.gameService.clearGamesListAllSteam();
-                            this.firstPageLoad = false;
-                            this.gameService.setGamesListAllSteam(games1);
-                        }
-                    })
-                );
-            } else {
-                return this.http.get<any>(this.url + 'steamGameList/true')
-                .pipe(
-                    map(games2 => {
-                        // console.log('2_1.trying second source of games list from Steam');
-                        dataExist = games2.hasOwnProperty('app') && games2['app'].length > 1;
-                        if (dataExist) {
-                            // console.log('2.1.second source of games list from Steam');
-                            games2 = games2.applist.apps;
-                        }
-                        return games2;
-                    }),
-                    tap(games2 => {
-                        if (dataExist) {
-                            this.gameService.clearGamesListAllSteam();
-                            this.firstPageLoad = false;
-                            this.gameService.setGamesListAllSteam(games2);
-                        }
-                    })
-                );
-            }
+            return this.http.get<any>(this.url + 'steamGameList')
+            .pipe(
+                map(games1 => {
+                    dataExist = games1.length > 1;
+                    return games1;
+                }),
+                tap(games1 => {
+                    if (dataExist) {
+                        this.gameService.clearGamesListAllSteam();
+                        this.firstPageLoad = false;
+                        this.gameService.setGamesListAllSteam(games1);
+                    }
+                })
+            );
         }
     }
 

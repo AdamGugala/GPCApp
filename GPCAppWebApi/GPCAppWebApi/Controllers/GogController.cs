@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace testApp.NETCore.Controllers
+namespace GPC.NETCore.Controllers
 {
     [ApiController]
     

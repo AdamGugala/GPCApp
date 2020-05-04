@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 
-namespace testApp.NETCore.Controllers
+namespace GPC.NETCore.Controllers
 {
     [ApiController]
     

@@ -8,7 +8,7 @@ import { isUndefined } from 'util';
 export class GamesService {
 
     private gamesListSteam: Game[] = [];
-    private gamesListAllSteam: any[] = [];
+    private gamesListAllSteam = new Map<string, number>();
     private gamesListGog: Game[] = [];
 
     gamesListChangedSteam = new Subject<any>();
@@ -28,26 +28,39 @@ export class GamesService {
 // STEAM //
     setGamesListAllSteam(games: any[]): boolean {
         if (games !== undefined) {
-            if (games.hasOwnProperty('app')) {
-                for (let i = 0; i < games['app'].length; i++) {
-                    this.gamesListAllSteam[games['app'][i].name] = games['app'][i];
-                }
-            } else if (games.hasOwnProperty('applist')) {
-                for (let i = 0; i < games['applist']['apps']['app'].length; i++) {
-                    this.gamesListAllSteam[games['applist']['apps']['app'][i].name] = games['applist']['apps']['app'][i];
-                }
+            // TODO detecting duplicates and inserting them into dictioanary with some subfix.
+            for (let i = 0; i < games.length; i++) {
+                this.gamesListAllSteam.set(games[i].Value, games[i].Key);
             }
+            console.log('---');
+            console.log(this.gamesListAllSteam.size);
+            console.log('---');
+            // console.log(this.gamesListAllSteam);
+            // console.log(games[1]['Key']);
+            // console.log(games[1]['Value']);
+
+
+
+            // if (games.hasOwnProperty('app')) {
+            //     for (let i = 0; i < games['app'].length; i++) {
+            //         this.gamesListAllSteam[games['app'][i].name] = games['app'][i];
+            //     }
+            // } else if (games.hasOwnProperty('applist')) {
+            //     for (let i = 0; i < games['applist']['apps']['app'].length; i++) {
+            //         this.gamesListAllSteam[games['applist']['apps']['app'][i].name] = games['applist']['apps']['app'][i];
+            //     }
+            // }
         }
         console.log('Steam game list All: ', games);
-        return this.gamesListAllSteam.length > 1;
+        return this.gamesListAllSteam.size > 1;
     }
 
     getGamesListAllSteam() {
-        return this.gamesListAllSteam.slice();
+        return this.gamesListAllSteam;
     }
 
     clearGamesListAllSteam() {
-        this.gamesListAllSteam.length = 0;
+        this.gamesListAllSteam.clear();
     }
 
     setGamesListSteam(game: any, isLastGame?: boolean) {
@@ -97,18 +110,15 @@ export class GamesService {
     getIndexesOfSearchedGamesSteam(searched: string): string[] {
         const indexes: string[] = [];
         const regex = new RegExp(`${searched.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}`, '\g\i');
+        console.log(this.gamesListAllSteam.values());
 
-        for (const key in this.gamesListAllSteam) {
+        this.gamesListAllSteam.forEach((id, key) => {
             if (regex.test(key)) {
-                indexes.push(this.gamesListAllSteam[key].appid);
-                // console.log(this.gamesListAllSteam[key].appid);
+                indexes.push(id.toString());
             }
-        }
+        });
         console.log('Steam game indexes: ', indexes);
         return indexes;
-        // console.log(('Hero Tower Demo' in this.gamesListAllSteam));
-        // console.log('searched phrase: ', searched);
-        // console.log(this.gamesListAllSteam['0']);
     }
 
     sortGamesListSteam() {
