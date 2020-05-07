@@ -42,10 +42,10 @@
         <div class="col-sm-6 gog">
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-7">
-                        <div class="gogLogo" [inlineSVG]="'assets/img/GOG.svg'" [setSVGAttributes]="{height: 100, width: 200}"></div>
+                    <div class="col-sm-8">
+                        <div class="gogLogo" [inlineSVG]="'assets/img/GOG.svg'" [setSVGAttributes]="{height: 100, width: 150}"></div>
                     </div>
-                    <div class="col-sm-5" style="align-self: center;">
+                    <div class="col-sm-4" style="align-self: center;">
                         <div *ngIf = this.isLoadingGog>
                             <app-loading-spinner [gameType]="'gog'"></app-loading-spinner>
                         </div>
@@ -56,10 +56,10 @@
         <div class="col-sm-6 steam">
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-7">
-                        <div class="steamLogo" [inlineSVG]="'assets/img/steam.svg'" [setSVGAttributes]="{height: 100, width: 200}"></div>
+                    <div class="col-sm-8">
+                        <div class="steamLogo" [inlineSVG]="'assets/img/steam.svg'" [setSVGAttributes]="{height: 100, width: 150}"></div>
                     </div>
-                    <div class="col-sm-5" style="align-self: center;">
+                    <div class="col-sm-4" style="align-self: center;">
                         <div *ngIf = this.isLoadingSteam>
                             <app-loading-spinner [gameType]="'steam'"></app-loading-spinner>
                         </div>

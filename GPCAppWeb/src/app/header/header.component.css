@@ -1,6 +1,7 @@
 .navbar-brand {
     font-size: 24px;
     text-shadow: black;
+    margin-left: 12px;
 }
 .myHeader {
     background-color: rgb(168, 168, 168);
@@ -10,15 +11,19 @@
 .myHeader .container-fluid {
     align-items: baseline;
     font-weight: 400;
+    padding: 0px 0px 0px 0px;
 }
-.active {
+.myHeader .active {
     font-weight: bold;
 }
-li {
+.myHeader li {
     margin: 0px 10px 0px 0px;
     font-size: 20px;
 }
-.navbar-nav span {
+/* ul.navbar-nav.mr-auto {
+    margin-right: 0px!important;
+} */
+.myHeader .navbar-nav span {
     content: '|';
     margin-right: 10px;
     color: rgb(73, 73, 73);
@@ -29,6 +34,45 @@ li {
     margin-right: 10px;
     color: rgb(73, 73, 73);
 } */
-a {
+.myHeader a {
     color: black;
 }
+.myHeader .icon-bar {
+	width: 22px; 
+	height: 2px;
+    background-color:black;
+    
+	display: block;
+	transition: all 0.2s;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    
+}
+.myHeader button.navbar-toggle {
+    border-radius: .25rem;
+    display: none;
+    padding: 0.3rem 0.4rem 0.3rem 0.4rem;
+}
+
+.myHeader .dropdown-divider {
+    width: 100%;
+    display: none;
+}
+
+
+@media (max-width:767px) {
+    .myHeader button.navbar-toggle {
+        border-radius: .25rem;
+        display: table-column;
+        margin: 0px 0px 0px 0px;
+    }
+    .myHeader .dropdown-divider {
+        display: block;
+    }
+    .myHeader .container-fluid {
+        display: block;
+    }
+}
+        
+
+

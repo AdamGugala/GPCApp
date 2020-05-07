@@ -7,8 +7,6 @@ Test application for obtaining information about game prices from Steam and Gog 
 - Web
 	- Keeping first row and header at top while scrolling down
 	- Add options to sort by title/price.
-	- header correction so that the header style changes as the page shrinks
-	- Repair of tab switching. A subscription to the GamesList tab does not exist after changing the tab
 	- About page
 	- Improving css style to comparing game prices
 	- General imporoving of css style

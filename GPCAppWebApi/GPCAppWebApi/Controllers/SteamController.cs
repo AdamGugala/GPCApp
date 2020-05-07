@@ -122,7 +122,7 @@ namespace GPC.NETCore.Controllers
             var ind = 0;
             var dictList = new List<Dictionary<int, string>> { new Dictionary<int, string>(), new Dictionary<int, string>() };
             // first one - dictionary with key-pair values to add to DB; second one - dictionary with key-pair values to delete from DB
-            dictList = DBManageClass.getDistinctGamesId(dict, getGamesIdFromDB());
+            dictList = DataManageClass.getDistinctGamesId(dict, getGamesIdFromDB());
 
             using (var context = new GPCdbContext(_options, _configuration)) {
                 try
@@ -171,7 +171,8 @@ namespace GPC.NETCore.Controllers
         
     }
 
-    public class DBManageClass {
+    public class DataManageClass
+    {
         public static List<Dictionary<int, string>> getDistinctGamesId(Dictionary<int, string> dictFromAPI, Dictionary<int, string> dictFromDB)
         {
             if (dictFromAPI.Count != dictFromDB.Count)

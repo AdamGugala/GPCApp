@@ -27,9 +27,10 @@ export class GamesListComponent implements OnInit, OnDestroy {
   // FormGroup from search bar.
   serachForm: FormGroup;
 
-  // if true then loading spinners are visible.
-  isLoadingSteam: boolean;
-  isLoadingGog: boolean;
+  // if true then loading spinners are visible. Because on init it is fetched list of all games from steam,
+  // isLoadingSteam is set as true on default, and if fetching was success or finish with error, then is set to false.
+  isLoadingSteam =  true;
+  isLoadingGog = false;
 
   // true by default. Set to false if list of games id from is not empty.
   gamesListSteamNoData = true;
@@ -55,14 +56,19 @@ export class GamesListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // sub to get id list of all games id from steam.
     // There are to sources. If first does not set the games list then the second is tried out.
-    this.isLoadingSteam = true;
-    this.subGamesListAllSteam = this.dsService.fetchGamesListAllSteam().subscribe(() => {
-      if (this.gamesService.getGamesListAllSteam().size > 1) {
+    if (this.gamesService.getGamesListAllSteamSize() > 0) {
+      this.gamesListSteamNoData = false;
+      this.isLoadingSteam = false;
+    }
 
-        this.gamesListSteamNoData = false;
-        this.isLoadingSteam = false;
-      }
-    });
+    if (this.gamesListSteamNoData) {
+      this.subGamesListAllSteam = this.dsService.fetchGamesListAllSteam().subscribe(() => {
+        if (this.gamesService.getGamesListAllSteam().size > 1) {
+          this.gamesListSteamNoData = false;
+          this.isLoadingSteam = false;
+        }
+      });
+    }
 
     // show error message if games list from steam is still empty after specified time
     let time = 0;
@@ -100,6 +106,7 @@ export class GamesListComponent implements OnInit, OnDestroy {
       this.onGogTest();
       this.onSteamTest();
     }
+
   }
 
   onGogTest() {

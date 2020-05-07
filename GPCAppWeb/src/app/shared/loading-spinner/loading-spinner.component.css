@@ -1,21 +1,29 @@
 .lds-ring {
     display: inline-block;
     position: relative;
-    width: 80px;
-    height: 80px;
+    /* width: 80px;
+    height: 80px; */
     border-color: inherit;
+    height: 6vw;
+    width: 6vw;
+    max-height: 80px;
+    max-width: 80px;
   }
   .lds-ring div {
     box-sizing: border-box;
     display: block;
     position: absolute;
-    width: 64px;
-    height: 64px;
+    /* width: 64px;
+    height: 64px; */
     margin: 8px;
     border: 8px solid rgb(240, 240, 240);
     border-radius: 50%;
     animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
     border-color: inherit;
+    height: 5vw;
+    width: 5vw;
+    max-height: 64px;
+    max-width: 64px;
   }
 .steamSpinner {
   border-color: #C6D4DF transparent transparent transparent;

@@ -31,7 +31,15 @@
 .gogLogo {
     max-height:100%;
     padding: 10px 0px 10px 0px;
+
 }
+
+svg {
+    width: 10px;
+    /* max-width: 20vw;
+    max-height:12vw; */
+}
+
 .gameListHeaders .col-sm-6 {
     padding: 0px 0px 0px 0px;
 }
@@ -53,3 +61,4 @@
 .errorMessageSteam p{
     margin: 0px 0px 0px 0px;
 }
+

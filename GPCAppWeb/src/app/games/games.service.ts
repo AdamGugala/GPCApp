@@ -8,14 +8,11 @@ import { isUndefined } from 'util';
 export class GamesService {
 
     private gamesListSteam: Game[] = [];
-    private gamesListAllSteam = new Map<string, number>();
+    private gamesListAllSteam = new Map<string, number[]>();
     private gamesListGog: Game[] = [];
 
     gamesListChangedSteam = new Subject<any>();
     gamesListChangedGog = new Subject<any>();
-
-    private gameSteam: any[];
-    private gameGog: any[];
 
     private mockGogGame: Game;
     private mockSteamGame: Game;
@@ -27,36 +24,31 @@ export class GamesService {
 /////////////////////////////////////////////////////////////////////////////////////////
 // STEAM //
     setGamesListAllSteam(games: any[]): boolean {
+        const ids: number[] = [];
         if (games !== undefined) {
             // TODO detecting duplicates and inserting them into dictioanary with some subfix.
             for (let i = 0; i < games.length; i++) {
-                this.gamesListAllSteam.set(games[i].Value, games[i].Key);
+                if (this.gamesListAllSteam.has(games[i].Value)) {
+                    this.gamesListAllSteam.get(games[i].Value).forEach(id => {
+                        ids.push(id);
+                    });
+                }
+                ids.push(games[i].Key);
+                this.gamesListAllSteam.set(games[i].Value, ids.slice());
+                ids.splice(0, ids.length);
             }
-            console.log('---');
-            console.log(this.gamesListAllSteam.size);
-            console.log('---');
-            // console.log(this.gamesListAllSteam);
-            // console.log(games[1]['Key']);
-            // console.log(games[1]['Value']);
-
-
-
-            // if (games.hasOwnProperty('app')) {
-            //     for (let i = 0; i < games['app'].length; i++) {
-            //         this.gamesListAllSteam[games['app'][i].name] = games['app'][i];
-            //     }
-            // } else if (games.hasOwnProperty('applist')) {
-            //     for (let i = 0; i < games['applist']['apps']['app'].length; i++) {
-            //         this.gamesListAllSteam[games['applist']['apps']['app'][i].name] = games['applist']['apps']['app'][i];
-            //     }
-            // }
         }
+        console.log(this.gamesListAllSteam);
         console.log('Steam game list All: ', games);
         return this.gamesListAllSteam.size > 1;
     }
 
     getGamesListAllSteam() {
         return this.gamesListAllSteam;
+    }
+
+    getGamesListAllSteamSize() {
+        return this.gamesListAllSteam.size;
     }
 
     clearGamesListAllSteam() {
@@ -80,17 +72,20 @@ export class GamesService {
                     currency = game[item].data.price_overview.currency;
                 }
 
-                this.gamesListSteam.push(
-                   new Game(
-                    +item,
-                    game[item].data.name,
-                    game[item].data.header_image,
-                    game[item].about_the_game,
-                    'steam',
-                    price,
-                    currency
-                    )
-                );
+                const isOnGameList = this.checkIfGameIsOnListSteam(game[item]);
+                if (!isOnGameList) {
+                    this.gamesListSteam.push(
+                       new Game(
+                        +item,
+                        game[item].data.name,
+                        game[item].data.header_image,
+                        game[item].about_the_game,
+                        'steam',
+                        price,
+                        currency
+                        )
+                    );
+                }
             }
         }
         this.gamesListChangedSteam.next(this.gamesListSteam.slice());
@@ -110,11 +105,26 @@ export class GamesService {
     getIndexesOfSearchedGamesSteam(searched: string): string[] {
         const indexes: string[] = [];
         const regex = new RegExp(`${searched.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}`, '\g\i');
+        let regexTestSuccess: boolean;
         console.log(this.gamesListAllSteam.values());
 
-        this.gamesListAllSteam.forEach((id, key) => {
+        this.gamesListAllSteam.forEach((ids, key) => {
+            regexTestSuccess = false;
+            if (key === 'Call of Duty 4: Modern Warfare') {
+                console.log(ids);
+            }
+            // key.split(' ').forEach(word => {
+            //     regexTestSuccess = regexTestSuccess || regex.test(word);
+            // });
+            // if (regexTestSuccess) {
+            //     ids.forEach(id => {
+            //                 indexes.push(id.toString());
+            //     });
+            // }
             if (regex.test(key)) {
-                indexes.push(id.toString());
+                ids.forEach(id => {
+                    indexes.push(id.toString());
+                });
             }
         });
         console.log('Steam game indexes: ', indexes);
@@ -124,6 +134,17 @@ export class GamesService {
     sortGamesListSteam() {
         this.gamesListSteam.sort( (a, b) => a.price > b.price ? -1 : 1);
         this.gamesListChangedSteam.next(this.gamesListSteam.slice());
+    }
+
+    // function used to determine if some duplicates exist on Steam game list. Some ids return the same json differing only in id.
+    checkIfGameIsOnListSteam(testedGame: any) {
+        let result = false;
+        this.gamesListSteam.forEach(game => {
+            result = result || (game.title === testedGame.data.name &&
+                                game.price === +testedGame.data.price_overview.final / 100 &&
+                                game.imagePath === testedGame.data.header_image);
+        });
+        return result;
     }
 
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -183,14 +204,15 @@ export class GamesService {
                 if (game.hasOwnProperty(item)) {
                     // it is always only one element.
                     // TODO: do this wiser
-                   this.mockSteamGame = new Game(
+                    this.mockSteamGame = new Game(
                         +item,
                         game[item].data.name,
                         game[item].data.header_image,
                         game[item].about_the_game,
                         'steam',
                         +(game[item].data.price_overview.final) / 100,
-                        game[item].data.price_overview.currency);
+                        game[item].data.price_overview.currency
+                    );
                 }
             }
         } else {
